@@ -5,7 +5,7 @@ const { createHmac } = require('crypto')
 const User = require('../models/user')
 
 router.get('/signup', (req, res) => {
-    res.render('signup')
+    res.render('signup', {currentPath: '/user/signup'})
 })
 router.post('/signup', async (req, res) => {
     const {fullName, email, password} = req.body
@@ -22,27 +22,24 @@ router.post('/signup', async (req, res) => {
 
 
 router.get('/signin', (req, res) => {
-    res.render('signin', {message: 'undefined'})
+    res.render('signin', {currentPath: '/user/signin'})
 })
 router.post('/signin', async (req, res) => {
     const {email, password} = req.body
 
-    const user = await User.findOne({email})
+    const token = await User.matchPasswordandGenerateToken(email, password)
 
-    if(!user) return res.render('signin', {message : "This email does not exist"})
-
-    const providedPassword = password
-
-    const salt = user.salt
-    const providedHashedPassword = createHmac('sha256', salt).update(providedPassword).digest('hex')
-    console.log(providedHashedPassword)
-
-    const actualHashedPassword = user.password
-
-    if(actualHashedPassword !== providedHashedPassword) return res.render('signin', {message : "Password is incorrect"})
-
+    if(!token) return res.render('signin', {currentPath: '/user/signin', message : "Email or password does not match"})
+    
+    
+    res.cookie('token', token)
     return res.redirect('/home')
 
+})
+
+router.get('/signout', (req, res) => {
+    res.clearCookie('token')
+    return res.redirect('/user/signin')
 })
 
 
