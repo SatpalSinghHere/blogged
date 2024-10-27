@@ -4,6 +4,7 @@ const path = require('path')
 const multer = require('multer')
 
 const Blog = require('../models/blog')
+const { findById } = require('../models/user')
 
 //multer storage
 const storage = multer.diskStorage({
@@ -53,6 +54,27 @@ router.get('/:id', async (req, res) => {
 router.get('/:id/edit', async (req, res) => {
   const blog = await Blog.findById(req.params.id)
   return res.render('editBlog', { blog: blog })
+})
+
+router.post('/:id/edit', upload.single('coverImage'), async (req, res) => {
+  const {title, content} = req.body
+  let blog
+  if (req.file) {
+    blog = await Blog.findByIdAndUpdate(req.params.id,{
+      title,
+      content,
+      authorId: req.user._id,
+      coverImage: `/uploads/${req.file.filename}`
+    })
+  } else {
+    blog = await Blog.findByIdAndUpdate(req.params.id,{
+      title,
+      content,
+      authorId: req.user._id
+    })
+  }
+
+  return res.redirect(`/blog/${blog._id}`)
 })
 
 module.exports = router
