@@ -1,3 +1,5 @@
+const dotenv = require('dotenv')
+dotenv.config()
 const path = require('path')
 const express = require('express')
 const cookieParser = require('cookie-parser')
@@ -12,7 +14,11 @@ const blogRoute = require('./routes/blogRoute')
 const { checkForAuthenticationToken } = require('./middlewares/checkCookieToken')
 
 //connecting mongodb
-mongoose.connect('mongodb://localhost:29000/blogged')
+const username = 'satpalsinghalive1'
+const password = '9sgqDBxMAtswMvfc'
+const url = process.env.MONGODB_URL
+
+mongoose.connect(`${url}blogged`)
     .then(()=>{
         console.log('Connected to mongodb')
     })

@@ -23,12 +23,21 @@ const blogSchema = mongoose.Schema({
     }
 }, { timestamps: true })
 
-blogSchema.pre('save', async function (req, res, next) {
-    const user = await User.findById(this.authorId)
-
-    this.author = user.fullName
-
-    next()
+blogSchema.pre('save', async function () {
+    if (this.isNew) { // Only fetch authorName on new document creation
+        try {
+            const author = await User.findById(this.authorId);
+            if (author) {
+                this.author = author.fullName;
+                console.log('author Name added : ',author.fullName ) // Assuming `username` is the field in User schema
+            } else {
+                throw new Error('Author not found');
+            }
+        } catch (error) {
+            throw new Error ('Author not found');
+        }
+    }
+    
 
 })
 
