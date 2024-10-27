@@ -14,8 +14,15 @@
                     <img src="<%= blog.coverImage %>" class="card-img-top" alt="...">
                     <div class="card-body">
                     <h5 class="card-title"><%=blog.title%></h5>
-                    
-                    <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
+                        <div style="display: flex; justify-content: space-between;">
+                            <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
+                            <div>
+                                <a href="/blog/<%= blog._id %>/edit" class="btn btn-warning">Edit</a>
+                                <form action="/blog/delete/<%= blog._id %>" method="get" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o" style="font-size:24px"></i></button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             <% }) %>

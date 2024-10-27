@@ -77,4 +77,9 @@ router.post('/:id/edit', upload.single('coverImage'), async (req, res) => {
   return res.redirect(`/blog/${blog._id}`)
 })
 
+router.get('/delete/:id', async (req, res) => {
+  const blog = await Blog.findByIdAndDelete(req.params.id)
+  return res.redirect('/home')
+})
+
 module.exports = router
