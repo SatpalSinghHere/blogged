@@ -14,8 +14,7 @@ const blogRoute = require('./routes/blogRoute')
 const { checkForAuthenticationToken } = require('./middlewares/checkCookieToken')
 
 //connecting mongodb
-const username = 'satpalsinghalive1'
-const password = '9sgqDBxMAtswMvfc'
+
 const url = process.env.MONGODB_URL
 
 mongoose.connect(`${url}blogged`)
